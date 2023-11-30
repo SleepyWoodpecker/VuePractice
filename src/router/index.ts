@@ -12,12 +12,13 @@ const routes: Array<RouteRecordRaw> = [
     path: "/login",
     name: "Login",
     component: () => import("@/views/LoginPage.vue"),
+    beforeEnter: (to) => checkLoginMenu(to),
   },
   {
     path: "/menu",
     name: "Menu",
     component: () => import("@/views/MenuPage.vue"),
-    beforeEnter: (to) => checkLogin(to),
+    beforeEnter: (to) => checkLoginMenu(to),
   },
 ];
 
@@ -26,18 +27,22 @@ const router = createRouter({
   routes,
 });
 
-const checkLogin = async (
+const checkLoginMenu = async (
   to: RouteLocationNormalized
 ): Promise<boolean | string> => {
   const { value } = await Preferences.get({ key: "user" });
-  // not ideal, but for now, I just check if the user has a token or not\
-  console.log(value);
-  console.log(to);
-  if (value && to.name !== "Login") {
-    return "/menu";
-  } else {
+  // not ideal, but for now, I just check if the user has a token or not
+
+  // if user does not have something in localstorage and is not trying to log in, make them log in
+  if (!value && to.path !== "/login") {
     return "/login";
   }
+
+  // else if the user has a token, but is trying to access the login page, redirect to the menu page -> this means that I have to make another guard if I make more pages
+  else if (value && to.path !== "/menu") {
+    return "/menu";
+  }
+  return true;
 };
 
 export default router;
