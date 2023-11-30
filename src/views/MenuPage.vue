@@ -4,7 +4,11 @@
       <div id="container">
         <h1>Menu page</h1>
         <div class="icon-bar">
-          <ion-icon :icon="exitOutline" size="large"></ion-icon>
+          <ion-icon
+            :icon="exitOutline"
+            size="large"
+            @click="handleLogout"
+          ></ion-icon>
           <ion-icon :icon="refreshOutline" size="large"></ion-icon>
         </div>
         <div class="picture-and-name">
@@ -51,6 +55,10 @@ import {
   eyeOutline,
 } from "ionicons/icons";
 import CardItem from "@/components/CardItem.vue";
+import { Preferences } from "@capacitor/preferences";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const cardItems = [
   { name: "Clock in", icon: enterOutline },
@@ -62,6 +70,11 @@ const cardItems = [
   { name: "Visitor Management", icon: peopleOutline },
   { name: "Sit Rep", icon: eyeOutline },
 ];
+
+const handleLogout = async () => {
+  await Preferences.remove({ key: "user" });
+  router.replace("/");
+};
 </script>
 
 <style scoped>

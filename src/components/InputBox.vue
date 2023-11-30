@@ -85,7 +85,6 @@ label {
 }
 
 ion-input.custom {
-  --highlight-color-focused: blue;
   margin: 10px 0px;
 }
 </style>
