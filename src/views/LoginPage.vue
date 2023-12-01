@@ -3,18 +3,8 @@
     <ion-content :fullscreen="true">
       <!-- <strong>This is a login page</strong> -->
       <div id="container">
-        <InputBox
-          label="Email"
-          input-type="email"
-          error-text="Enter a valid email"
-          v-model="emailInput"
-          @update="handleEmailUpdate"
-        />
-        <InputBox
-          label="Password"
-          input-type="text"
-          @update="handlePasswordUpdate"
-        />
+        <EmailInput @change="handleEmailUpdate" />
+        <PasswordInput @change="handlePasswordUpdate" />
         <ion-button
           expand="full"
           class="login"
@@ -29,7 +19,8 @@
 
 <script setup lang="ts">
 import { IonContent, IonPage, IonButton } from "@ionic/vue";
-import InputBox from "@/components/InputBox.vue";
+import PasswordInput from "@/components/Input/PasswordInput.vue";
+import EmailInput from "@/components/Input/EmailInput.vue";
 import { ref } from "vue";
 import { LoginDetails } from "@/types";
 import { login } from "@/services";
@@ -52,7 +43,12 @@ const handlePasswordUpdate = (content: string) => {
 };
 
 const checkEnableButton = () => {
-  if (emailInput.value && passwordInput.value) {
+  if (
+    emailInput.value.match(
+      /^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+    ) &&
+    passwordInput.value
+  ) {
     loginDisabled.value = false;
   }
 };
@@ -78,7 +74,7 @@ const handleLogin = async () => {
     });
     router.replace("/menu");
   } else {
-    console.log("nay");
+    alert("Either username or password is wrong");
   }
 };
 </script>

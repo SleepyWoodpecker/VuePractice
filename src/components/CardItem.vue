@@ -1,23 +1,22 @@
 <template>
-  <ion-card class="card-container">
-    <!-- <div class="card-container"> -->
-    <slot v-if="icon" name="menuIcon"></slot>
+  <ion-card class="icon-container" :class="{ clickable: isClickable }">
+    <ion-icon v-if="icon" :icon="icon" size="large"></ion-icon>
     {{ name }}
-    <!-- </div> -->
   </ion-card>
 </template>
 
 <script setup lang="ts">
-import { IonCard } from "@ionic/vue";
+import { IonCard, IonIcon } from "@ionic/vue";
 
 defineProps<{
   name: string;
   icon?: string;
+  isClickable?: boolean;
 }>();
 </script>
 
 <style scoped>
-.card-container {
+.icon-container {
   /* margin: 0px; */
   --color: #29ac8b;
   display: flex;

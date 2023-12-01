@@ -6,19 +6,18 @@
         <div class="icon-bar">
           <ion-icon
             :icon="exitOutline"
+            class="clickable"
             size="large"
             @click="handleLogout"
           ></ion-icon>
           <ion-icon :icon="refreshOutline" size="large"></ion-icon>
         </div>
         <div class="picture-and-name">
-          <ion-avatar>
-            <ion-img
-              src="https://www.wilsoncenter.org/sites/default/files/media/images/person/james-person-1.jpg"
-              alt="person"
-              class="custom-image"
-            ></ion-img>
-          </ion-avatar>
+          <ImageAvatar
+            src="https://www.wilsoncenter.org/sites/default/files/media/images/person/james-person-1.jpg"
+            alt="person"
+            size="5rem"
+          />
           <div class="message">
             <h3>Hello</h3>
             <p>Your name</p>
@@ -30,10 +29,8 @@
             :key="card.name"
             :name="card.name"
             :icon="card.icon"
+            isClickable
           >
-            <template v-slot:menuIcon>
-              <ion-icon :icon="card.icon" size="large" />
-            </template>
           </CardItem>
         </div>
       </div>
@@ -42,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonIcon, IonImg, IonAvatar } from "@ionic/vue";
+import { IonPage, IonContent, IonIcon } from "@ionic/vue";
 import {
   exitOutline,
   refreshOutline,
@@ -55,6 +52,7 @@ import {
   eyeOutline,
 } from "ionicons/icons";
 import CardItem from "@/components/CardItem.vue";
+import ImageAvatar from "@/components/ImageAvatar.vue";
 import { Preferences } from "@capacitor/preferences";
 import { useRouter } from "vue-router";
 
@@ -91,11 +89,6 @@ const handleLogout = async () => {
   gap: 1rem;
 }
 
-.custom-image {
-  height: 5rem;
-  width: 5rem;
-}
-
 .picture-and-name {
   display: flex;
   gap: 3rem;
@@ -116,6 +109,12 @@ const handleLogout = async () => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
+}
+</style>
+
+<style>
+.clickable:hover {
+  cursor: pointer;
 }
 </style>
 

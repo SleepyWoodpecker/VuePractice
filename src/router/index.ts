@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 // have to separately install this storage manager -> prevents data from being cleared like in localStorage
 import { Preferences } from "@capacitor/preferences";
-import { RouteLocationNormalized, RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,13 +12,27 @@ const routes: Array<RouteRecordRaw> = [
     path: "/login",
     name: "Login",
     component: () => import("@/views/LoginPage.vue"),
-    beforeEnter: (to) => checkLoginMenu(to),
+    beforeEnter: async () => {
+      const isLoggedIn = await checkLogin();
+      if (isLoggedIn) {
+        return "/menu";
+      } else {
+        return true;
+      }
+    },
   },
   {
     path: "/menu",
     name: "Menu",
     component: () => import("@/views/MenuPage.vue"),
-    beforeEnter: (to) => checkLoginMenu(to),
+    beforeEnter: async () => {
+      const isLoggedIn = await checkLogin();
+      if (!isLoggedIn) {
+        return "/login";
+      } else {
+        return true;
+      }
+    },
   },
 ];
 
@@ -27,22 +41,14 @@ const router = createRouter({
   routes,
 });
 
-const checkLoginMenu = async (
-  to: RouteLocationNormalized
-): Promise<boolean | string> => {
+const checkLogin = async (): Promise<boolean> => {
   const { value } = await Preferences.get({ key: "user" });
-  // not ideal, but for now, I just check if the user has a token or not
 
-  // if user does not have something in localstorage and is not trying to log in, make them log in
-  if (!value && to.path !== "/login") {
-    return "/login";
+  if (value) {
+    return true;
+  } else {
+    return false;
   }
-
-  // else if the user has a token, but is trying to access the login page, redirect to the menu page -> this means that I have to make another guard if I make more pages
-  else if (value && to.path !== "/menu") {
-    return "/menu";
-  }
-  return true;
 };
 
 export default router;
