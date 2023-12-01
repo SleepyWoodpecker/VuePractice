@@ -59,14 +59,6 @@ const handleLogin = async () => {
     password: passwordInput.value,
   };
   const loginResponse = await login(loginDetails);
-
-  // ASK ABOUT THIS -> why TS gives me an error when I do this!
-  // if (loginResponse.token) {
-  //   console.log("log in success");
-  // } else {
-  //   console.log("failed log in");
-  // }
-  console.log(loginResponse);
   if ("token" in loginResponse) {
     await Preferences.set({
       key: "user",
@@ -74,8 +66,15 @@ const handleLogin = async () => {
     });
     router.replace("/menu");
   } else {
-    alert("Either username or password is wrong");
+    alert("login failed");
   }
+
+  // ASK ABOUT THIS -> why TS gives me an error when I do this!
+  // if (loginResponse.token) {
+  //   console.log("log in success");
+  // } else {
+  //   console.log("failed log in");
+  // }
 };
 </script>
 

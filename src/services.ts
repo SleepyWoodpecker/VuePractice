@@ -1,20 +1,18 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { LoginDetails } from "./types";
 
-interface LoginSuccessResponse {
-  token: string;
-}
-
-interface LoginFailResponse {
-  error: string;
-}
-
-export const login = async (
-  loginDetails: LoginDetails
-): Promise<LoginSuccessResponse | LoginFailResponse> => {
-  const { data } = await axios.post<LoginSuccessResponse | LoginFailResponse>(
-    "https://reqres.in/api/login",
-    loginDetails
-  );
-  return data;
+export const login = async (loginDetails: LoginDetails) => {
+  try {
+    const { data } = await axios.post(
+      "https://reqres.in/api/login",
+      loginDetails
+    );
+    return data;
+  } catch (e) {
+    if (isAxiosError(e) && e.status === 400) {
+      return e.response?.data;
+    } else {
+      return { error: "Something went wrong, please try again" };
+    }
+  }
 };

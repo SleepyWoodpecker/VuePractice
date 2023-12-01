@@ -1,7 +1,7 @@
 <template>
   <InputBox
     ref="passwordInputRef"
-    label="password"
+    label="Password"
     error-text="Password cannot be empty"
     @focus="handlePasswordFocus"
     @change="handlePasswordChange"
